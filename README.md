@@ -1,5 +1,6 @@
 # Merkle Tree Dart
 
+Updated copy of https://github.com/ethereumdart/merkletree that was itself originally
 Ported from https://github.com/miguelmota/merkletreejs
 
 ## Construct a Merkle Tree.

@@ -1,3 +1,7 @@
+# 2.0.0
+- Remove pedantic and use lints instead
+- Updated code style to modern dart
+- Upgraded pointycastle and change `sha3` to be `keccak256` as they're not the same, don't produce the same output and the impl. doesn't actually use the current sha3
 # 1.0.4
 - enforce pedantic lint
 
