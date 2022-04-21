@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:merkletree/src/utils.dart';
+import 'package:hypi_merkletree/src/utils.dart';
 
 typedef HashAlgo = Uint8List Function(Uint8List input);
 
@@ -24,7 +24,7 @@ class MerkleTree {
   /// import 'dart:typed_data';
   ///
   /// import 'package:convert/convert.dart';
-  /// import 'package:merkletree/merkletree.dart';
+  /// import 'package:merkletree/hypi_merkletree.dart';
   /// import 'package:pointycastle/pointycastle.dart';
   ///
   /// Uint8List sha3(Uint8List data) {

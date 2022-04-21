@@ -14,7 +14,7 @@ Enable it when you need to replicate Bitcoin constructed Merkle Trees. In Bitcoi
 ```dart
 import 'dart:typed_data';
 
-import 'package:merkletree/merkletree.dart';
+import 'package:merkletree/hypi_merkletree.dart';
 import 'package:pointycastle/pointycastle.dart';
 
   Uint8List sha256(Uint8List data) {

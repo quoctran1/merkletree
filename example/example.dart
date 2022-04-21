@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:merkletree/merkletree.dart';
+import 'package:hypi_merkletree/hypi_merkletree.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 void main() {

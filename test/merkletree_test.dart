@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:merkletree/merkletree.dart';
-import 'package:merkletree/src/utils.dart';
+import 'package:hypi_merkletree/hypi_merkletree.dart';
+import 'package:hypi_merkletree/src/utils.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:test/test.dart';
 
