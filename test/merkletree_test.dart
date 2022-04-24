@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -11,6 +12,11 @@ Uint8List sha256(Uint8List data) {
   return sha256.process(data);
 }
 
+Uint8List sha1(Uint8List data) {
+  final sha1 = Digest('SHA-1');
+  return sha1.process(data);
+}
+
 Uint8List keccak256(Uint8List data) {
   //Original called this function sha3 but its Keccak-256
   //https://github.com/PointyCastle/pointycastle/issues/128#issuecomment-395101228
@@ -20,6 +26,77 @@ Uint8List keccak256(Uint8List data) {
 
 void main() {
   group('merkeltree', () {
+    test('== and hashCode behave predictably', () {
+      final l1 = ['a', 'b', 'c']
+          .map((x) => Uint8List.fromList(x.codeUnits))
+          .map((x) => keccak256(x))
+          .toList();
+      final l2 = ['a', 'b', 'c']
+          .map((x) => Uint8List.fromList(x.codeUnits))
+          .map((x) => keccak256(x))
+          .toList();
+      final a = MerkleTree(leaves: l1, hashAlgo: sha256);
+      final b = MerkleTree(leaves: l2, hashAlgo: sha256);
+      expect(a == b, true);
+      expect(a.hashCode, b.hashCode);
+    });
+    test('can get tree with hex string', () {
+      final l1 = ['a', 'b', 'c']
+          .map((x) => Uint8List.fromList(x.codeUnits))
+          .map((x) => keccak256(x))
+          .toList();
+      final a = MerkleTree(leaves: l1, hashAlgo: sha256);
+      expect(
+        a.asHex,
+        //the tree is in reverse order
+        [
+          [
+            '3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb',
+            'b5553de315e0edf504d9150af82dafa5c4667fa618ed0a6f19c69b41166c5510',
+            '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+          ],
+          [
+            '176f0f307632fdd5831875eb709e2f68d770b102262998b214ddeb3f04164ae1',
+            '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+          ],
+          ['311d2e46f49b15fff8b746b74ad57f2cc9e0d9939fda94387141a2d3fdf187ae']
+        ],
+      );
+    });
+    test('can get tree with hex string with sha1', () {
+      final l1 = ['a', 'b', 'c']
+          .map((x) => Uint8List.fromList(x.codeUnits))
+          .map((x) => keccak256(x))
+          .toList();
+      final a = MerkleTree(leaves: l1, hashAlgo: sha1);
+      expect(
+        a.asHex,
+        //the tree is in reverse order
+        [
+          [
+            '3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb',
+            'b5553de315e0edf504d9150af82dafa5c4667fa618ed0a6f19c69b41166c5510',
+            '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+          ],
+          [
+            'cd0202339456ac935feb21432cad2d77af482b12',
+            '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+          ],
+          ['20cdeb6f549e4ba50145cd8ba10ad39ffe8f3728']
+        ],
+      );
+    });
+    test('hex tree is json serialisable', () {
+      final l1 = ['a', 'b', 'c']
+          .map((x) => Uint8List.fromList(x.codeUnits))
+          .map((x) => keccak256(x))
+          .toList();
+      final a = MerkleTree(leaves: l1, hashAlgo: sha1);
+      expect(
+        json.encode(a.asHex),
+        '[["3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb","b5553de315e0edf504d9150af82dafa5c4667fa618ed0a6f19c69b41166c5510","0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2"],["cd0202339456ac935feb21432cad2d77af482b12","0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2"],["20cdeb6f549e4ba50145cd8ba10ad39ffe8f3728"]]',
+      );
+    });
     test('sha256 - keccak256 leaves', () {
       final leaves = ['a', 'b', 'c']
           .map((x) => Uint8List.fromList(x.codeUnits))

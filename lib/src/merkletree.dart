@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:convert/convert.dart';
 import 'package:hypi_merkletree/src/utils.dart';
 
 typedef HashAlgo = Uint8List Function(Uint8List input);
@@ -42,6 +43,19 @@ class MerkleTree {
   }) : _layers = [leaves] {
     _createHashes(leaves);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      //From List mixin - so we compare ourselves
+      // Lists are, by default, only equal to themselves.
+      // Even if [other] is also a list, the equality comparison
+      // does not compare the elements of the two lists.
+      identical(this, other) ||
+      (other is MerkleTree &&
+          0 == MerkleTreeUtils.bufferCompare(root, other.root));
+
+  @override
+  int get hashCode => Object.hashAll(root);
 
   void _createHashes(List<Uint8List> nodes) {
     while (nodes.length > 1) {
@@ -95,6 +109,9 @@ class MerkleTree {
       nodes = _layers[layerIndex];
     }
   }
+
+  List<List<String>> get asHex =>
+      layers.map((e) => e.map((v) => hex.encode(v)).toList()).toList();
 
   /// Returns array of all layers of Merkle Tree, including leaves and root.
   List<List<Uint8List>> get layers {
