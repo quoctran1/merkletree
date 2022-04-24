@@ -1,6 +1,6 @@
 name: hypi_merkletree
 description: A Dart implementation of the merkle tree able to construct and verify merkle trees.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/hypi-universe/merkletree
 
 environment:
@@ -9,9 +9,9 @@ environment:
 dependencies:
   meta: ^1.7.0
   buffer: ^1.1.1
+  convert: ^3.0.1
 
 dev_dependencies:
   lints: ^1.0.1
   test: ^1.21.0
   pointycastle: ^3.5.2
-  convert: ^3.0.1

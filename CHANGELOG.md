@@ -1,3 +1,6 @@
+# 2.0.1
+- Implements == and hashCode in terms of the root hash
+- Add hex rendering of the tree making it JSON serialisable
 # 2.0.0
 - Remove pedantic and use lints instead
 - Updated code style to modern dart
