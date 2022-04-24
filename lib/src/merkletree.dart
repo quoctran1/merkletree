@@ -8,7 +8,6 @@ typedef HashAlgo = Uint8List Function(Uint8List input);
 /// Class representing a Merkle Tree
 class MerkleTree {
   final HashAlgo hashAlgo;
-  final List<Uint8List> leaves;
   final List<List<Uint8List>> _layers;
   final bool isBitcoinTree;
 
@@ -37,12 +36,18 @@ class MerkleTree {
   /// final tree = MerkleTree(leaves: leaves, hashAlgo: sha256);
   /// ```
   MerkleTree({
-    required this.leaves,
+    required List<Uint8List> leaves,
     required this.hashAlgo,
     this.isBitcoinTree = false,
   }) : _layers = [leaves] {
     _createHashes(leaves);
   }
+
+  MerkleTree.fromTree({
+    required List<List<Uint8List>> layers,
+    required this.hashAlgo,
+    this.isBitcoinTree = false,
+  }) : _layers = layers;
 
   @override
   bool operator ==(Object other) =>
@@ -110,7 +115,7 @@ class MerkleTree {
     }
   }
 
-  List<List<String>> get asHex =>
+  List<List<String>> get layersAsHex =>
       layers.map((e) => e.map((v) => hex.encode(v)).toList()).toList();
 
   /// Returns array of all layers of Merkle Tree, including leaves and root.
@@ -149,7 +154,7 @@ class MerkleTree {
     int index = -1,
   }) {
     final proof = <MerkleProof>[];
-
+    List<Uint8List> leaves = layers[0];
     if (index == -1) {
       for (var i = 0; i < leaves.length; i++) {
         if (MerkleTreeUtils.bufferCompare(leaf, leaves[i]) == 0) {

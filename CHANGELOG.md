@@ -1,3 +1,5 @@
+# 2.0.2
+- Add ctor to de-serialise a merkle tree directly from an array
 # 2.0.1
 - Implements == and hashCode in terms of the root hash
 - Add hex rendering of the tree making it JSON serialisable

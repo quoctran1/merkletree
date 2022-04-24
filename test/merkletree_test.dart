@@ -47,7 +47,7 @@ void main() {
           .toList();
       final a = MerkleTree(leaves: l1, hashAlgo: sha256);
       expect(
-        a.asHex,
+        a.layersAsHex,
         //the tree is in reverse order
         [
           [
@@ -63,6 +63,29 @@ void main() {
         ],
       );
     });
+    test('Can re-construct from hex', () {
+      final hexTree = [
+        [
+          '3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb',
+          'b5553de315e0edf504d9150af82dafa5c4667fa618ed0a6f19c69b41166c5510',
+          '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+        ],
+        [
+          '176f0f307632fdd5831875eb709e2f68d770b102262998b214ddeb3f04164ae1',
+          '0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2'
+        ],
+        ['311d2e46f49b15fff8b746b74ad57f2cc9e0d9939fda94387141a2d3fdf187ae']
+      ];
+      final a = MerkleTree.fromTree(
+        layers: hexTree
+            .map(
+              (e) => e.map((v) => Uint8List.fromList(hex.decode(v))).toList(),
+            )
+            .toList(),
+        hashAlgo: sha256,
+      );
+      expect(a.layersAsHex, hexTree);
+    });
     test('can get tree with hex string with sha1', () {
       final l1 = ['a', 'b', 'c']
           .map((x) => Uint8List.fromList(x.codeUnits))
@@ -70,7 +93,7 @@ void main() {
           .toList();
       final a = MerkleTree(leaves: l1, hashAlgo: sha1);
       expect(
-        a.asHex,
+        a.layersAsHex,
         //the tree is in reverse order
         [
           [
@@ -93,7 +116,7 @@ void main() {
           .toList();
       final a = MerkleTree(leaves: l1, hashAlgo: sha1);
       expect(
-        json.encode(a.asHex),
+        json.encode(a.layersAsHex),
         '[["3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb","b5553de315e0edf504d9150af82dafa5c4667fa618ed0a6f19c69b41166c5510","0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2"],["cd0202339456ac935feb21432cad2d77af482b12","0b42b6393c1f53060fe3ddbfcd7aadcca894465a5a438f69c87d790b2299b9b2"],["20cdeb6f549e4ba50145cd8ba10ad39ffe8f3728"]]',
       );
     });
